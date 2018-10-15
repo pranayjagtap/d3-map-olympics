@@ -1,0 +1,53 @@
+.jumbotron{
+
+
+    background-color: #D3D3D3;
+
+    border-radius: 15px;
+
+    font-size:"200px";
+    margin: 25px 0px 25px 0px;
+
+
+
+}
+.container{
+
+
+}
+
+hr {
+    background-color: #E8E8E8;
+}
+.land {
+    fill: #ddd;
+}
+
+.border {
+    fill: none;
+    stroke: #fff;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+}
+
+.bubble {
+    fill: orangered;
+    fill-opacity: .5;
+    stroke: #fff;
+    stroke-width: .5px;
+}
+
+.bubble :hover {
+    stroke: #000;
+}
+
+.legend circle {
+    fill: none;
+    stroke: #ccc;
+}
+
+.legend text {
+    fill: #777;
+    font: 10px sans-serif;
+    text-anchor: middle;
+}

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+
+
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap-grid.css">
+    <link rel="stylesheet" href="css/bootstrap-reboot.css">
+
+    <link rel="stylesheet" href="./css/base.css">
+
+    <script src="js/jquery-3.3.1.js" type="text/javascript" ></script>
+    <script src="js/bootstrap.bundle.js" type="text/javascript" ></script>
+    <script src="js/bootstrap.sjs" type="text/javascript" ></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.24.0/d3-legend.js"></script>
+
+
+
+    <script src="js/plotMap.js" type="text/javascript" ></script>
+    <script src="js/plotPie.js" type="text/javascript" ></script>
+    <script src="js/perCapitaMap.js" type="text/javascript" ></script>
+    <script src="js/bubblemap.js" type="text/javascript" ></script>
+    <style>
+        .arc text {
+            font: 10px sans-serif;
+            text-anchor: middle;
+        }
+
+        .arc path {
+            stroke: #fff;
+        }
+
+        .countries {
+            fill: none;
+            stroke: #000;
+            stroke-linejoin: round;
+        }
+        .legendThreshold {
+            font-size: 10px;
+            font-family: sans-serif;
+        }
+        .caption {
+            fill: #000;
+            text-anchor: start;
+            font-weight: bold;
+        }
+        .boundary {
+            fill: none;
+            stroke: #000;
+            stroke-width: 1px;
+        }
+    </style>
+<script>
+    document.getElementById("title2").innerHTML="DONUT PIE CHART";
+    document.getElementById("para").innerHTML="Details of participation distribution between different sports";
+
+    </script>
+
+
+</head>
+
+<body>
+<div class="container">
+    <div class="jumbotron">
+        <h5>Homework #3 D3 Map Programming</h5>
+        <h1>Title: Olympics Statistics</h1>
+        <p>Visualization of Olympics data using D3 to encode features of data in order to gain insights.</p>
+        <b>Designed by Pranay Jagtap</b>
+    </div>
+    <div  class="row" style="background-color:#E8E8E8;border-radius: 15px;">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-10">
+            <p> <b>Features and interactions</b></p>
+            <ul>
+            <li><b>Toggle Interaction</b> : Toggle between raw data & per capita , Toggle between Chloropleth & bubble map</li>
+            <li><b>Click interaction</b>: Click on countries of the map to generate drilled down view in the form of donut pie chart</li>
+            <li><b>Annotation Interaction</b> : See popup annotations on mouse hover maps and donut pie chart</li>
+            <li>Raw data: Number of participating players.</li>
+            <li>Per Capita(Spatial): Number of medals won / area of country</li>
+            </ul>
+        </div>
+        <div class="col-lg-1"></div>
+    </div>
+    <hr>
+    <div class="row" style="background-color:#E8E8E8;border-radius:15px;">
+        <div class="col-lg-3">
+            <select class="custom-select" id="select_type" onChange="ChangeValue()">   //Added this drop down selector on 09-Sep-2018 to allow user to filter data based on years
+
+                <option selected  value="0">Raw Data</option>
+                <option  value="1">Per Capita</option>
+
+            </select>
+            <script>
+                //Not working yet -09-Sep-2018
+                function ChangeValue() {
+                    document.getElementById("para").innerHTML="Details of participation distribution between different sports";
+                    document.getElementById("title2").innerHTML="DONUT PIE CHART";
+                    var sel = document.getElementById('select_type');
+                    var colorScheme = d3.schemeBlues[6]
+                    console.log( sel.value );
+                    if(sel.value==="0")
+                        plotMap(colorScheme);
+                    else
+                        perCapitaMap(colorScheme);
+                }
+            </script>
+        </div>
+        <div class="col-lg-3">
+            <select class="custom-select" id="select_map" onChange="ChangeValue2()">   //Added this drop down selector on 09-Sep-2018 to allow user to filter data based on years
+                <option selected value="chloropleth">Chloropleth</option>
+                <option value="Final">Bubble Map(Density)</option>
+
+            </select>
+            <script>
+                //Not working yet -09-Sep-2018
+                function ChangeValue2() {
+                    document.getElementById("title2").innerHTML="";
+                    document.getElementById("para").innerHTML="";
+                    var sel2 = document.getElementById('select_map');
+                    var colorScheme = d3.schemeBlues[6]
+                    console.log( sel2.value );
+                    if(sel2.value==="chloropleth"){
+                        document.getElementById("para").innerHTML="Details of participation distribution between different sports";
+                        document.getElementById("title2").innerHTML="DONUT PIE CHART";
+                        plotMap(colorScheme);
+                    }
+
+                    else
+                        bubblemap();
+                }
+            </script>
+
+        </div>
+
+    </div>
+
+    <br>
+
+    <div  class="row" style="background-color:#F8F8F8;border-radius: 15px;">
+
+        <div class="col-lg-8" >
+            <h4 align="center">MAP VISUALIZATION</h4>
+            <h6 align="center">Click on countries to get a drilled down sports distribution</h6>
+            <h6 align="center">Use data type and map type filter with the above two drop down</h6>
+            <svg id="vis_canvas" height="500" width="2000">
+
+
+            </svg>
+        </div>
+        <div class="col-lg-4">
+            <h4 id="title2" align="center"></h4>
+            <h6 id="para" align="center"></h6>
+            <svg id="vis_canvas2" height="500" width="400">
+
+
+            </svg>
+
+        </div>
+
+    </div>
+    <hr>
+    <div  class="row" style="background-color:#E8E8E8;border-radius: 15px;">
+        <div class="col-lg-3"></div>
+
+        <div class="col-lg-3"></div>
+    </div>
+
+    <hr>
+    <div class="row"  style="background-color:#E8E8E8;border-radius:15px;">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-10" >
+
+            <h4 align="center">WRITE UP</h4>
+            <ul>
+                <li> The first visualization is a Chloropleth map which is useful to see number of players participating in Olympics from each country.</li>
+                <li> Number of players in each country is basically calculated by taking a count of entries by considering country as key.</li>
+                <li> On hovering over each country, user can see the name of country and the number of players who participated. This plot is interactive in nature.</li>
+                <li> <b>Donut pie chart is generated after user clicks on certain country</b></li>
+                <li> When the user <b>clicks on a country area</b>, a new donut pie chart is generated which gives distribution of participation between different sporting events.</li>
+                <li> Percentage of distribution is displayed ((Count of players for a sport/ Total participants for that country)*100) </li>
+                <li> User can <b>hover over the each slice of donut pie chart</b> to see percentage values for different olympic event.</li>
+                <li>For example, if user wants to how many players participated from different countries, they can see that by chloropleth map plotted. Further more if user wants to get details of what was participation in different events for particular country, they can do that by clicking on that country and viewing the donut pie chart</li>
+                <li> Therefore, all the basic requirements of assignments are covered with chloropleth map and donut pie chart</li>
+            </ul>
+            <h5>BONUS</h5>
+            <ul>
+                <li>1. <b>Nested data structure</b> was created in order to get the <b>per capita (density) of medals won by a country</b> where in outer key is country and inner key is medal and its value is sum of medals won(Gold/Silver/Bronze). </li>
+                <li> Density or per capita of medals is obtained by calculating (medals won)/sq unit area of the country. This represents the spatial density.</li>
+                <li>2. As a part of bonus requirement, <b>two toggle/drop downs are added in the form of drop down menus</b> which allows user to switch between <b>Raw data/Per capita and Chloropleth map/Bubble map</b>.
+
+                <li>Limitations of chloropleth map for density plot was that countries like <b>Luxembourg which have high medals/sq ft area (density) are not distinctly noticed due to small size</b></li>
+                <li>To overcome above limitation,bonus visualization in the form of Bubble map is plotted for density data only where in cases luxembourg with high density can be clearly identified.</li>
+                <li>User can easily switch between chloropleth and bubble map using drop down menu.</li>
+                <li>Chloropleth map has both raw data representation and density representation</li>
+                <li>Bubble map is used for only density or per capita data (Spatial)</li>
+                <li><b>Therefore, both bonus requirements are met in the form of 1. Switch between raw data and per capita(drop down 1) and switch between chloropleth map and bubble map(second drop down) </b> </li>
+
+            </ul>
+            <ul>
+                <b>Examples/Story Line</b>
+                <li>User can see how player participation for different countries is. User is interested to see how many players participated from India so he hovers over India and sees that value is 162. Now user clicks on India to see how these 162 players are distributed between different sports. He sees the donut pie chart and notices that participation in athletics is highest with 21% followed by hockey in 14%</li>
+                <li>User wants to now see spatial density of participation (per capita). User selects per capita from first drop down and can see shaded regions on map based on medals won/sq ft area of country. </li>
+                <li>Problem with above is that user is not able to find out which country has highest density.</li>
+                <li>To overcome this, user selects bubble map from second drop down and now finds out that luxembourg has highest density as bubble is biggest and is distinctly seen.</li>
+            </ul>
+
+            <ul>
+                <b>Marks and channels</b>
+                <li>Number of players/Density(medals/area),participation in different sports % act as marks or basic elements in vsiualizations while their position map and arc or coverage on pie chart acts as channel or appearance of these marks.</li>
+            </ul>
+
+        </div>
+        <div class="col-lg-1"></div>
+
+
+    </div>
+</div>
+<script>
+    var sel = document.getElementById('select_type');
+    document.getElementById("title2").innerHTML="DONUT PIE CHART";
+    document.getElementById("para").innerHTML="Details of participation distribution between different sports";
+    var colorScheme = d3.schemeBlues[6]
+    console.log( sel.value );
+    if(sel.value==="0")
+        plotMap(colorScheme);
+    else
+        perCapitaMap();
+</script>
+</body>
+</html>
