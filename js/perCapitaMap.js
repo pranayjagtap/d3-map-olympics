@@ -105,7 +105,7 @@ console.log(data3)
             .attr("x", 0)
             .attr("y", -6)
             .text("Count");
-        var labels = ['0','0.005','0.025', '0.05', '0.1','0.2', '0.5',   '> 1'];
+        var labels = ['0  Medals/sq.ft area','0.005','0.025', '0.05', '0.1','0.2', '0.5',   '> 1'];
         var legend = d3.legendColor()
             .labels(function (d) {
 

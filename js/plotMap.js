@@ -69,9 +69,9 @@ function plotMap() {
         g.append("ext")
             .attr("class", "caption")
             .attr("x", 0)
-            .attr("y", -6)
-            .text("Count");
-        var labels = ['0','100','200', '500', '1000', '1500',   '> 2000'];
+            .attr("y", 0)
+            .text("No. of participants");
+        var labels = ['0    No. of Participants','100','200', '500', '1000', '1500',   '> 2000'];
 
         var legend = d3.legendColor()
             .labels(function (d) {

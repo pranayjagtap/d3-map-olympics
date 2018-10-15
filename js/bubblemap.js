@@ -145,7 +145,7 @@ function bubblemap(){
                             .attr('stroke-width',1)
                     })
                     .append('title')
-                    .text(function(d) {return d.properties.name+'\nDensity: '+(mapper[d.properties.name]===undefined?0:mapper[d.properties.name]);})
+                    .text(function(d) {return d.properties.name+'\nDensity(medals/area): '+(mapper[d.properties.name]===undefined?0:mapper[d.properties.name]);})
 
 
 
