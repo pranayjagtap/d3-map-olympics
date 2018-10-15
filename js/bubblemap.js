@@ -57,7 +57,7 @@ function bubblemap(){
 // Load external data and boot
 
         d3.queue()
-            .defer(d3.json, "http://enjalot.github.io/wwsd/data/world/world-110m.geojson")
+            .defer(d3.json, './data/world.json')
 
 
             .await(function ready(error, topo,data) {

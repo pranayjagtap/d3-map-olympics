@@ -13,7 +13,7 @@ function perCapitaMap() {
 
     var margin = { top: 20, right: 0, bottom: 20, left: 0 }
     var height = 400 - margin.top - margin.bottom
-    var width = 700 - margin.left - margin.right
+    var width = 800 - margin.left - margin.right
     var mycanvas=d3.select("#vis_canvas")
     var svg = mycanvas.append("svg")
         .attr('height',height + margin.top + margin.bottom)
@@ -121,7 +121,7 @@ console.log(data3)
 // Load external data and boot
 
         d3.queue()
-            .defer(d3.json, "http://enjalot.github.io/wwsd/data/world/world-110m.geojson")
+            .defer(d3.json, './data/world.json')
 
 
             .await(function ready(error, topo,data) {
